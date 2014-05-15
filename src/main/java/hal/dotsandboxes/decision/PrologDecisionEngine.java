@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
-import hal.dotsandboxes.DefaultEdge;
 import hal.dotsandboxes.Direction;
 import hal.dotsandboxes.Edge;
 import hal.dotsandboxes.Game;
@@ -78,7 +77,7 @@ public class PrologDecisionEngine implements DecisionEngine {
 			System.exit(1);
 		}
 		
-		Edge move = DefaultEdge.obtain(
+		Edge move = Edge.obtain(
 				Integer.parseInt(matcher.group(2)), 
 				Integer.parseInt(matcher.group(3)),
 				matcher.group(4).equals(ATOM_RIGHT) ? 

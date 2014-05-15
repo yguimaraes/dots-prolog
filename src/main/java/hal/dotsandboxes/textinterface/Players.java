@@ -1,16 +1,10 @@
 package hal.dotsandboxes.textinterface;
 
-import hal.dotsandboxes.DefaultPlayer;
 import hal.dotsandboxes.Player;
 import hal.dotsandboxes.decision.DecisionEngine;
-import hal.dotsandboxes.decision.JavaMinimaxDecisionEngine;
-import hal.dotsandboxes.decision.JavaMinimaxDecisionEngine.MinimaxType;
 import hal.dotsandboxes.decision.PrologDecisionEngine;
-import hal.dotsandboxes.decision.StupidRandomMoveDecisionEngine;
 import hal.dotsandboxes.decision.UserInputDecisionEngine;
 import hal.dotsandboxes.prolog.PrologRunner;
-import hal.dotsandboxes.prolog.SicstusPrologRunner;
-import hal.dotsandboxes.prolog.SwiPrologRunner;
 import hal.dotsandboxes.prolog.Utils;
 
 import java.io.File;
@@ -44,10 +38,8 @@ public final class Players {
                 }
             }
 			
-            if(options.getPrologType() == PrologEngine.sicstus)
-                    plRunner = new SicstusPrologRunner(prologExecutable);
-            else
-                    plRunner = new SwiPrologRunner(prologExecutable);
+
+            plRunner = new PrologRunner(prologExecutable);
         }
 		
         return ImmutableList.of(
@@ -72,23 +64,16 @@ public final class Players {
 		
 		DecisionEngine de;
 		switch(controllerType) {
-			case java:
-				de = new JavaMinimaxDecisionEngine(
-						lookahead, MinimaxType.NORMAL_MINIMAX);
-				break;
 			case human:
 				de = new UserInputDecisionEngine(System.out, System.in);
 				break;
 			case prolog:
 				de = new PrologDecisionEngine(lookahead, plRunner, plFile);
 				break;
-			case stupid:
-				de = new StupidRandomMoveDecisionEngine();
-				break;
 			default:
 				throw new AssertionError();
 		}
 		
-		return new DefaultPlayer(name, de);
+		return new Player(name, de);
 	}
 }

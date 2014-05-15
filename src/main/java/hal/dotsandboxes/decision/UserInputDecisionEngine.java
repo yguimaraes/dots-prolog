@@ -5,7 +5,7 @@ import java.io.PrintStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import hal.dotsandboxes.DefaultEdge;
+import hal.dotsandboxes.Edge;
 import hal.dotsandboxes.Direction;
 import hal.dotsandboxes.Edge;
 import hal.dotsandboxes.Game;
@@ -56,7 +56,7 @@ public class UserInputDecisionEngine implements DecisionEngine {
 			}
 			
 			// Build an edge from the user input.
-			Edge e = DefaultEdge.obtain(
+			Edge e = Edge.obtain(
 					Integer.parseInt(m.group(1)),
 					Integer.parseInt(m.group(2)),
 					directionFromWord((m.group(3))));

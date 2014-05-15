@@ -1,54 +1,82 @@
 package hal.dotsandboxes;
 
-/**
- * Represents a move made by a player of dots and boxes. The move adds a 
- * single edge to the board.
- * 
- * <p>Edges are represented by a starting point with a direction. All edges are
- * of unit length, that is they are always between horizontally or vertically 
- * adjacent nodes.
- * 
- * <p>The normXXX() methods provide access to the edge in canonical form in 
- * which the direction may only be right or down.
- */
-public interface Edge {
+import static com.google.common.base.Preconditions.*;
+
+public final class Edge{
 	
-	/**
-	 * @return The x coodinate of the start of the edge added by this move.
-	 */
-	int getX();
+	private final int mX, mY;
 	
-	/**
-	 * @return The y coodinate of the start of the edge added by this move.
-	 */
-	int getY();
+	private final Direction mDirection;
 	
-	/**
-	 * @return The direction the edge extends away from the x,y position in.
-	 */
-	Direction getDirection();
+	private Edge(int x, int y, Direction direction) {
+		mX = x;
+		mY = y;
+		mDirection = checkNotNull(direction);
+	}
 	
-	/**
-	 * Gets the x coordinate for a canonical representation of an edge where
-	 * the direction can only be right or down.
-	 * 
-	 * @return The canonical x coordinate.
-	 */
-	int getCanX();
+	public static Edge obtain(int x, int y, Direction direction) {
+		return new Edge(x, y, direction);
+	}
 	
-	/**
-	 * Gets the y coordinate for a canonical representation of an edge where
-	 * the direction can only be right or down.
-	 * 
-	 * @return The canonical y coordinate.
-	 */
-	int getCanY();
+	public int getX() {
+		return mX;
+	}
+
+	public int getY() {
+		return mY;
+	}
+
+	public Direction getDirection() {
+		return mDirection;
+	}
 	
-	/**
-	 * Gets the canonical direction of the edge which must be either right or 
-	 * down.
-	 * 
-	 * @return The canonical direction of this edge.
-	 */
-	Direction getCanDirection();
+	public int getCanX() {
+		return mDirection == Direction.LEFT ? mX - 1 : mX;
+	}
+
+	public int getCanY() {
+		return mDirection == Direction.ABOVE ? mY - 1 : mY;
+	}
+
+	public Direction getCanDirection() {
+		switch(mDirection) {
+			case LEFT: return Direction.RIGHT;
+			case ABOVE: return Direction.BELOW;
+			default: return mDirection;		
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + getCanDirection().hashCode();
+		result = prime * result + getCanX();
+		result = prime * result + getCanY();
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Edge other = (Edge) obj;
+		if (getCanDirection() != other.getCanDirection())
+			return false;
+		if (getCanX() != other.getCanX())
+			return false;
+		if (getCanY() != other.getCanY())
+			return false;
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("Edge(from: (%d, %d), direction: %s)", 
+				mX, mY, mDirection);
+	}
 }

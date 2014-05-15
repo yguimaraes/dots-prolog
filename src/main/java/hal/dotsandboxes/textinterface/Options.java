@@ -42,7 +42,7 @@ public interface Options {
 			description="The search depth for player 1. Default: 4")
 	int getP1Lookahead();
 	
-	@Option(longName="p2-lookahead", defaultValue="4", 
+	@Option(longName="p2-lookahead", defaultValue="3", 
 			description="The search depth for player 2. Default: 4")
 	int getP2Lookahead();
 	

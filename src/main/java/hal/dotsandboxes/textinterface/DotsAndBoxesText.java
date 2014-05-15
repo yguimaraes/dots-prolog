@@ -2,8 +2,8 @@ package hal.dotsandboxes.textinterface;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import hal.dotsandboxes.DefaultGame;
-import hal.dotsandboxes.DefaultGameState;
+import hal.dotsandboxes.Game;
+import hal.dotsandboxes.GameState;
 import hal.dotsandboxes.Edge;
 import hal.dotsandboxes.Game;
 import hal.dotsandboxes.GameState;
@@ -107,7 +107,7 @@ public class DotsAndBoxesText {
 		mBoardWidth = width;
 		mBoardHeight = height;
 		
-		mGame = DefaultGame.INSTANCE;
+		mGame = Game.INSTANCE;
 		mPrinter = printer;
 		
 		mAlwaysShowBoard = alwaysShowBoard;
@@ -134,7 +134,7 @@ public class DotsAndBoxesText {
 				ImmutableList.of(mPlayer1, mPlayer2) :
 				ImmutableList.of(mPlayer2, mPlayer1);
 		
-		GameState state = DefaultGameState.get(mBoardWidth, mBoardHeight, 
+		GameState state = GameState.get(mBoardWidth, mBoardHeight, 
 				players);
 		
 		int turn = 1;

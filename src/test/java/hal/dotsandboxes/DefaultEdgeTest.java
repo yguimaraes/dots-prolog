@@ -11,8 +11,8 @@ public class DefaultEdgeTest {
 
 	@Test
 	public void testHashCodeEquals1() {
-		DefaultEdge a = DefaultEdge.obtain(0, 0, Direction.RIGHT);
-		DefaultEdge b = DefaultEdge.obtain(1, 0, Direction.LEFT);
+		Edge a = Edge.obtain(0, 0, Direction.RIGHT);
+		Edge b = Edge.obtain(1, 0, Direction.LEFT);
 		
 		assertThat(a, equalTo(b));
 		assertThat(a.hashCode(), equalTo(b.hashCode()));
@@ -20,8 +20,8 @@ public class DefaultEdgeTest {
 	
 	@Test
 	public void testHashCodeEquals2() {
-		DefaultEdge a = DefaultEdge.obtain(0, 0, Direction.BELOW);
-		DefaultEdge b = DefaultEdge.obtain(0, 1, Direction.ABOVE);
+		Edge a = Edge.obtain(0, 0, Direction.BELOW);
+		Edge b = Edge.obtain(0, 1, Direction.ABOVE);
 		
 		assertThat(a, equalTo(b));
 		assertThat(a.hashCode(), equalTo(b.hashCode()));
@@ -29,11 +29,11 @@ public class DefaultEdgeTest {
 	
 	@Test
 	public void testAddSet() {
-		DefaultEdge a = DefaultEdge.obtain(0, 0, Direction.BELOW);
-		DefaultEdge b = DefaultEdge.obtain(0, 1, Direction.ABOVE);
+		Edge a = Edge.obtain(0, 0, Direction.BELOW);
+		Edge b = Edge.obtain(0, 1, Direction.ABOVE);
 		
-		DefaultEdge c = DefaultEdge.obtain(0, 0, Direction.RIGHT);
-		DefaultEdge d = DefaultEdge.obtain(1, 0, Direction.LEFT);
+		Edge c = Edge.obtain(0, 0, Direction.RIGHT);
+		Edge d = Edge.obtain(1, 0, Direction.LEFT);
 		
 		ImmutableSet<Edge> edges = ImmutableSet.<Edge>of(a, b, c, d);
 		
