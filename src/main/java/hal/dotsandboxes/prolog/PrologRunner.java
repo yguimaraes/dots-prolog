@@ -30,8 +30,6 @@ public final class PrologRunner {
 				mExecutable.getAbsolutePath(),
 				getArguments(goal, prologFilePath));
 
-                //cmd = "\"/usr/bin/swipl\" -q -s \"/home/yago/Desktop/teste.pl\" -g \"main(4,4,[edge(2,2,down)-p1],2,[p1,p2])\"";
-                
 		CommandLine cmdLine = CommandLine.parse(cmd);		
 
 		ByteArrayOutputStream stdout = new ByteArrayOutputStream();

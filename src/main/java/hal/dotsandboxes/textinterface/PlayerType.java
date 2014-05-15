@@ -10,7 +10,5 @@ package hal.dotsandboxes.textinterface;
  */
 public enum PlayerType {
 	human, 
-	prolog, 
-	stupid, 
-	java;
+	prolog;
 }

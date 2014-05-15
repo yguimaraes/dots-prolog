@@ -62,7 +62,7 @@ public class DotsAndBoxesText {
 		}
 		
 		// Start the game
-		ImmutableList<Player> players = Players.makePlayers(options);
+		List<Player> players = Players.makePlayers(options);
 		Preconditions.checkState(players.size() == 2, "unexpected player " +
 				"count received from Players.makePlayers");
 		Player p1 = players.get(0);
