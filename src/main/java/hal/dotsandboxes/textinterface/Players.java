@@ -17,23 +17,22 @@ import com.google.common.collect.ImmutableList;
 public final class Players {
     private Players() { throw new AssertionError(); }
 	
-    public static ImmutableList<Player> makePlayers(Options options) throws IOException {
+    public static ImmutableList<Player> makePlayers(GameOptions options) throws IOException {
 		
         PrologRunner plRunner = null;
         File plFile = null;
-        if(options.playerOneType() == PlayerType.prolog || options.playerTwoType() == PlayerType.prolog) {
-
+        if(options.getPlayerOneType() == PlayerType.prolog || options.getPlayerTwoType() == PlayerType.prolog) {
             // Extract the prolog source to a temp file...
             plFile = Utils.extractResourceToTempFile(Utils.DOTS_AND_BOXES_PROLOG_FILE);
 		
             //O executavel, ex: swipl
             File prologExecutable;
-            if(options.getPrologPath().contains(SystemUtils.FILE_SEPARATOR))
-                prologExecutable = new File(options.getPrologPath());
+            if("swipl".contains(SystemUtils.FILE_SEPARATOR))
+                prologExecutable = new File("swipl");
             else {
-                prologExecutable = Utils.findProgramOnPath(options.getPrologPath());
+                prologExecutable = Utils.findProgramOnPath("swipl");
                 if(prologExecutable == null) {
-                    System.err.println("Could not find program in the search path: " + options.getPrologPath());
+                    System.err.println("Could not find program in the search path: " + "swipl");
                     System.exit(1);
                 }
             }
@@ -47,15 +46,15 @@ public final class Players {
             makePlayerTwo(options, plRunner, plFile));
 	}
 	
-	public static Player makePlayerOne(Options options, PrologRunner plRunner,
+	public static Player makePlayerOne(GameOptions options, PrologRunner plRunner,
 			File plFile) {
-		return makePlayer(options.playerOneName(), options.playerOneType(), 
+		return makePlayer(options.getPlayerOneName(), options.getPlayerOneType(), 
 				options.getP1Lookahead(), plRunner, plFile);
 	}
 	
-	public static Player makePlayerTwo(Options options, PrologRunner plRunner,
+	public static Player makePlayerTwo(GameOptions options, PrologRunner plRunner,
 			File plFile) {
-		return makePlayer(options.playerTwoName(), options.playerTwoType(), 
+		return makePlayer(options.getPlayerTwoName(), options.getPlayerTwoType(), 
 				options.getP2Lookahead(), plRunner, plFile);
 	}
 	

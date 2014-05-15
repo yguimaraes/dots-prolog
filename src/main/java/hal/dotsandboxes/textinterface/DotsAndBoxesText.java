@@ -2,8 +2,6 @@ package hal.dotsandboxes.textinterface;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import hal.dotsandboxes.Game;
-import hal.dotsandboxes.GameState;
 import hal.dotsandboxes.Edge;
 import hal.dotsandboxes.Game;
 import hal.dotsandboxes.GameState;
@@ -24,11 +22,13 @@ import uk.co.flamingpenguin.jewel.cli.CliFactory;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import hal.dotsandboxes.textinterface.Values.BoardRepresentation;
 
 public class DotsAndBoxesText {
 	
 	public static void main(String[] args) throws IOException {
-		Options options;
+		Options old_options;
+                GameOptions  options;
 		
 		try {
 			Cli<Options> cli = CliFactory.createCli(Options.class);
@@ -52,7 +52,8 @@ public class DotsAndBoxesText {
 				System.exit(0);
 			}
 			
-			options = cli.parseArguments(args);
+			old_options = cli.parseArguments(args);
+                        options = new GameOptions(old_options.playerOneType(), old_options.playerTwoType(), old_options.getWidth(), old_options.getHeight(), old_options.getP1Lookahead(), old_options.getP2Lookahead());
 		} 
 		catch (ArgumentValidationException e) {
 			System.err.println(e.getMessage());
@@ -66,10 +67,12 @@ public class DotsAndBoxesText {
 				"count received from Players.makePlayers");
 		Player p1 = players.get(0);
 		Player p2 = players.get(1);
-		
+                
+		BoardRepresentation boardRepresentation = BoardRepresentation.normal;
+                
 		new DotsAndBoxesText(options.getWidth(), options.getHeight(), p1, p2,
-				options.getBoardRepresentation().getPrinter(), 
-				options.getAlwaysShowBoardAndContinue())
+				boardRepresentation.getPrinter(), 
+				true)
 			.play();
 	}
 
