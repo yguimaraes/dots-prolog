@@ -8,74 +8,16 @@ import hal.dotsandboxes.GameState;
 import hal.dotsandboxes.Player;
 import hal.util.Pair;
 
-import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
 
-import uk.co.flamingpenguin.jewel.cli.ArgumentValidationException;
-import uk.co.flamingpenguin.jewel.cli.Cli;
-import uk.co.flamingpenguin.jewel.cli.CliFactory;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import hal.dotsandboxes.textinterface.Values.BoardRepresentation;
 
 public class DotsAndBoxesText {
-	
-	public static void main(String[] args) throws IOException {
-		Options old_options;
-                GameOptions  options;
-		
-		try {
-			Cli<Options> cli = CliFactory.createCli(Options.class);
-			
-			/*
-			args = new String[]{
-					"--player-one-type", "java",
-					"--player-two-type", "prolog",
-					"--prolog-executable", "C:\\Program Files (x86)\\SICStus Prolog 3.11.1\\bin\\sicstus.exe",
-					"--prolog-type", "sicstus",
-					"--p2-lookahead", "4",
-					"--p1-lookahead", "4",
-					"--width", "4",
-					"--height", "4",
-					"--yes"
-			};
-			//*/
-			
-			if(Arrays.asList(args).contains("--help")) {
-				System.out.println(cli.getHelpMessage());
-				System.exit(0);
-			}
-			
-			old_options = cli.parseArguments(args);
-                        options = new GameOptions(old_options.playerOneType(), old_options.playerTwoType(), old_options.getWidth(), old_options.getHeight(), old_options.getP1Lookahead(), old_options.getP2Lookahead());
-		} 
-		catch (ArgumentValidationException e) {
-			System.err.println(e.getMessage());
-			System.exit(1);
-			throw new AssertionError("never happens");
-		}
-		
-		// Start the game
-		List<Player> players = Players.makePlayers(options);
-		Preconditions.checkState(players.size() == 2, "unexpected player " +
-				"count received from Players.makePlayers");
-		Player p1 = players.get(0);
-		Player p2 = players.get(1);
-                
-		BoardRepresentation boardRepresentation = BoardRepresentation.normal;
-                
-		new DotsAndBoxesText(options.getWidth(), options.getHeight(), p1, p2,
-				boardRepresentation.getPrinter(), 
-				true)
-			.play();
-	}
-
 	private final int mOutWidth = 80;
 	
 	private final PrintStream mOut = System.out;
