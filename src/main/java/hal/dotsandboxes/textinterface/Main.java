@@ -14,12 +14,8 @@ import uk.co.flamingpenguin.jewel.cli.CliFactory;
 public class Main extends javax.swing.JFrame {
     //Class Variables    
     public Board board;
-    public int board_side;
-    
     public int currentPlayer; //1 ou 2
-    
     public DotsAndBoxesText dotsAndBoxesText;
-    
     public int lastX, lastY;
     
     public Main(){
@@ -89,16 +85,12 @@ public class Main extends javax.swing.JFrame {
         jComboBoxPlayer1 = new javax.swing.JComboBox();
         jLabelPlayer2 = new javax.swing.JLabel();
         jComboBoxPlayer2 = new javax.swing.JComboBox();
-        jComboBoxGridSize = new javax.swing.JComboBox();
+        jComboBoxGridWidth = new javax.swing.JComboBox();
         jLabelGridSize = new javax.swing.JLabel();
         jButtonStartGame = new javax.swing.JButton();
         jLabelBoard = new javax.swing.JLabel();
+        jComboBoxGridHeigth = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabelMousePressedX = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabeelMousePressedY = new javax.swing.JLabel();
         jLabelTeste = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
@@ -134,10 +126,10 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jComboBoxGridSize.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
-        jComboBoxGridSize.addActionListener(new java.awt.event.ActionListener() {
+        jComboBoxGridWidth.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
+        jComboBoxGridWidth.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxGridSizeActionPerformed(evt);
+                jComboBoxGridWidthActionPerformed(evt);
             }
         });
 
@@ -152,6 +144,13 @@ public class Main extends javax.swing.JFrame {
 
         jLabelBoard.setText("jLabel1");
 
+        jComboBoxGridHeigth.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
+        jComboBoxGridHeigth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxGridHeigthActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -159,24 +158,26 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelBoard)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabelPlayer1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jComboBoxPlayer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jButtonStartGame, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabelPlayer2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jLabelGridSize)
-                                    .addGap(8, 8, 8)))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jComboBoxGridSize, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboBoxPlayer2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabelPlayer2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabelGridSize)
+                                .addGap(8, 8, 8)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBoxPlayer2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBoxGridWidth, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBoxGridHeigth, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabelBoard)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonStartGame)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -186,32 +187,24 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelPlayer1)
                     .addComponent(jComboBoxPlayer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelPlayer2)
-                    .addComponent(jComboBoxPlayer2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(jComboBoxPlayer2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelPlayer2))
+                .addGap(9, 9, 9)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelGridSize)
-                    .addComponent(jComboBoxGridSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jButtonStartGame)
+                    .addComponent(jComboBoxGridWidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelGridSize))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxGridHeigth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabelBoard)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelBoard)
+                    .addComponent(jButtonStartGame))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Status"));
-
-        jLabel6.setText("Pressed");
-
-        jLabel2.setText("x");
-
-        jLabelMousePressedX.setText("_x");
-
-        jLabel3.setText("y");
-
-        jLabeelMousePressedY.setText("_y");
 
         jLabelTeste.setText("Teste:");
 
@@ -229,33 +222,14 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabelMousePressedX))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabeelMousePressedY))
-                    .addComponent(jLabel6)
                     .addComponent(jLabelTeste)
                     .addComponent(jButton1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabelMousePressedX))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabeelMousePressedY))
-                .addGap(29, 29, 29)
+                .addGap(125, 125, 125)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabelTeste)
@@ -307,33 +281,29 @@ public class Main extends javax.swing.JFrame {
         // Set Player 1 value
     }//GEN-LAST:event_jComboBoxPlayer2ActionPerformed
 
-    private void jComboBoxGridSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxGridSizeActionPerformed
+    private void jComboBoxGridWidthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxGridWidthActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxGridSizeActionPerformed
+    }//GEN-LAST:event_jComboBoxGridWidthActionPerformed
 
     private void jButtonStartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartGameActionPerformed
         //Set new game parameters
-        board_side = jComboBoxGridSize.getSelectedIndex()+1;
-        board = new Board(board_side);
+        board = new Board(jComboBoxGridWidth.getSelectedIndex()+1, 
+                          jComboBoxGridHeigth.getSelectedIndex()+1);
         
         //Create board
         jLabelBoard.setIcon(board.getBoardImage());
         jLabelBoard.setText("");           
         jLabelTable.add(jLabelBoard);
-        jLabelBoard.setSize(board.getBoardSide(), board.getBoardSide());
-        jLabelBoard.setLocation(10, 10);
+        jLabelBoard.setSize(board.getBoardWidth(), board.getBoardHeigth());
+        jLabelBoard.setLocation(board.getPaddX(), board.getPaddY());
         
         //Really start game
-        dotsAndBoxesText.play();
+        ////////////////////dotsAndBoxesText.play();
     }//GEN-LAST:event_jButtonStartGameActionPerformed
 
     private void jLabelTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelTableMousePressed
         //Get x y
-        lastX = evt.getX();
-        lastY = evt.getY();
-        
-        jLabelMousePressedX.setText(Integer.toString(lastX));
-        jLabeelMousePressedY.setText(Integer.toString(lastY));       
+              
         
     }//GEN-LAST:event_jLabelTableMousePressed
 
@@ -343,14 +313,58 @@ public class Main extends javax.swing.JFrame {
         System.out.println("getBoardInput()");
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jComboBoxGridHeigthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxGridHeigthActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxGridHeigthActionPerformed
+
     public void getBoardInput(){
         //Add action listener to label        
         jLabelTable.addMouseListener(new MouseAdapter(){
             @Override
-            public void mousePressed(MouseEvent e){
-                System.out.println("Board Input: ");
-                System.out.println("    - X: " + Integer.toString(e.getX()));
-                System.out.println("    - Y: " + Integer.toString(e.getY()));
+            public void mousePressed(MouseEvent e){             
+                //Get X and Y
+                lastX = e.getX() - board.getPaddX();
+                lastY = e.getY() - board.getPaddY();
+                int sizeX = lastX, sizeY = lastY;
+                int countX = 0, countY = 0;
+                
+                //X and Y must be inside the board
+                if(lastX > board.getBoardWidth() || lastY > board.getBoardHeigth())
+                    return;
+                
+                //Get Edge
+                String direction = "";
+                //X and Y
+                while(sizeX > board.getExtendedBoxSide()){
+                    sizeX = sizeX - board.getBoxSide();
+                    countX++;
+                }
+                
+                while(sizeY > board.getExtendedBoxSide()){
+                    sizeY = sizeY - board.getBoxSide();
+                    countY++;
+                }
+                
+                if(sizeX > 2*board.getDotRadius() && sizeX < board.getBoxSide()){
+                    if(sizeY > 0 && sizeY < 2*board.getDotRadius()){
+                        direction = "RIGTH"; //(UP)
+                    }else if(sizeY > board.getBoxSide() && sizeY < 2*board.getDotRadius() + board.getBoxSide()){
+                        direction = "RIGTH"; //(DOWN)
+                        countY++;
+                    }
+                }else if(sizeY > 2*board.getDotRadius() && sizeY < board.getBoxSide()){
+                    if(sizeX > 0 && sizeX < 2*board.getDotRadius()){
+                        direction = "DOWN"; //(LEFT)
+                    }else if(sizeX > board.getBoxSide() && sizeX < 2*board.getDotRadius() + board.getBoxSide()){
+                        direction = "DOWN"; //(RIGTH)
+                        countX++;
+                    }
+                }else{
+                    return;
+                }
+                            
+                System.out.println("\nEDGE = (" + countX + ", " + 
+                        countY + ", " + direction + ")\n");
                 
                 jLabelTable.removeMouseListener(this);
             }
@@ -392,16 +406,12 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonStartGame;
-    private javax.swing.JComboBox jComboBoxGridSize;
+    private javax.swing.JComboBox jComboBoxGridHeigth;
+    private javax.swing.JComboBox jComboBoxGridWidth;
     private javax.swing.JComboBox jComboBoxPlayer1;
     private javax.swing.JComboBox jComboBoxPlayer2;
-    private javax.swing.JLabel jLabeelMousePressedY;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabelBoard;
     private javax.swing.JLabel jLabelGridSize;
-    private javax.swing.JLabel jLabelMousePressedX;
     private javax.swing.JLabel jLabelPlayer1;
     private javax.swing.JLabel jLabelPlayer2;
     private javax.swing.JLabel jLabelTable;

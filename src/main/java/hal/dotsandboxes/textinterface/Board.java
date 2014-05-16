@@ -10,13 +10,17 @@ import java.awt.Graphics;
 public class Board {
     private final String boxString = "/media/vanzan/Files/Dropbox/Documentos/"
             + "IME/7_Periodo/Logica/Trabalho Prolog/DotsAndBoxes/box.png";
+    
     private final int box_side = 50;
     private final int dot_radius = 5;
-    private int n;
+    private int width, heigth;
+    
+    public final int paddX = 10, paddY = 10;
     
     
-    public Board(int n){
-        this.n = n;
+    public Board(int width, int heigth){
+        this.width = width;
+        this.heigth = heigth;
     }
     
     public int getBoxSide(){
@@ -31,19 +35,39 @@ public class Board {
         return box_side + 2*dot_radius;
     }
     
-    public int getBoardSide(){
-        return n*box_side + 2*dot_radius;
+    public int getWidth(){
+        return width;
+    }
+    
+    public int getHeigth(){
+        return heigth;
+    }
+    
+    public int getBoardWidth(){
+        return width*box_side + 2*dot_radius;
+    }
+    
+    public int getBoardHeigth(){
+        return heigth*box_side + 2*dot_radius;
+    }
+    
+     public int getPaddX(){
+        return paddX;
+    }
+    
+    public int getPaddY(){
+        return paddY;
     }
     
     public ImageIcon getBoardImage(){
         try{            
             BufferedImage box = ImageIO.read(new File(boxString));
             BufferedImage line = box;
-            for(int i=1; i<n; i++) //  The first box is already placed
+            for(int i=1; i<width; i++) //  The first box is already placed
                 line = mergeAtSide(line, box);
             
             BufferedImage board = line;
-            for(int j=1; j<n; j++)
+            for(int j=1; j<heigth; j++)
                 board = mergeAtBottom(board, line);
             
             return new ImageIcon(board);            
