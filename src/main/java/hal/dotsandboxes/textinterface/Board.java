@@ -1,19 +1,22 @@
 package hal.dotsandboxes.textinterface;
 
+import hal.dotsandboxes.Direction;
+import hal.dotsandboxes.Edge;
+import hal.dotsandboxes.GameState;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.Graphics;
 
 public class Board {
-    private final String boxString = "/media/vanzan/Files/Dropbox/Documentos/"
-            + "IME/7_Periodo/Logica/Trabalho Prolog/DotsAndBoxes/box.png";
+    private final String boxString = "box.png";
     
     private final int box_side = 50;
     private final int dot_radius = 5;
     private int width, heigth;
+    private int lastX, lastY;
     
     public final int paddX = 10, paddY = 10;
     
@@ -99,5 +102,71 @@ public class Board {
         g.drawImage(img2, 0, img1.getHeight() - 2*dot_radius, null);
     
         return combined;
+    }
+    
+    public Edge getEdge(int _lastX, int _lastY){
+        System.out.println("getEdge()");
+        
+        Edge emptyEdge = null;
+        
+         //Get X and Y
+        lastX = _lastX - paddX;
+        lastY = _lastY - paddY;
+        int sizeX = lastX, sizeY = lastY;
+        int countX = 0, countY = 0;
+        Direction direction;
+
+        //X and Y must be inside the board
+        if(lastX > getBoardWidth() || lastY > getBoardHeigth())
+            return emptyEdge;
+
+        //X and Y
+        while(sizeX > getExtendedBoxSide()){
+            sizeX = sizeX - getBoxSide();
+            countX++;
+        }
+
+        while(sizeY > getExtendedBoxSide()){
+            sizeY = sizeY - getBoxSide();
+            countY++;
+        }
+
+        if(sizeX > 2*getDotRadius() && sizeX < getBoxSide()){
+            if(sizeY > 0 && sizeY < 2*getDotRadius()){
+                direction = Direction.RIGHT; //(UP)
+            }else if(sizeY > getBoxSide() && sizeY < 2*getDotRadius() + getBoxSide()){
+                direction = Direction.RIGHT; //(DOWN)
+                countY++;
+            }else{
+                return emptyEdge;
+            }
+        }else if(sizeY > 2*getDotRadius() && sizeY < getBoxSide()){
+            if(sizeX > 0 && sizeX < 2*getDotRadius()){
+                direction = Direction.BELOW; //(LEFT)
+            }else if(sizeX > getBoxSide() && sizeX < 2*getDotRadius() + getBoxSide()){
+                direction = Direction.BELOW; //(RIGTH)
+                countX++;
+            }else{
+                return emptyEdge;
+            }
+        }else{
+            return emptyEdge;
+        }
+
+        //return edge
+//        System.out.println("\nMYEDGE = (" + countX + ", " + 
+//                countY + ", " + direction + ")\n"); 
+        Edge returnEdge = Edge.obtain(countX, countY, direction);        
+        return returnEdge;
+    }
+    
+    public void printBoard(GameState state){
+//        for
+//                for
+//                        getNodeEdges(int x, int y)
+    }
+    
+    public String toString(){
+        return ("Board - " + getBoardWidth() + " x " + getBoardHeigth());
     }
 }

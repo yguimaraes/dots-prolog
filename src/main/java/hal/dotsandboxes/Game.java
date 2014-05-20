@@ -1,11 +1,11 @@
 package hal.dotsandboxes;
 
+import com.google.common.base.Preconditions;
 import static com.google.common.base.Preconditions.*;
 
-import java.util.List;
-
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import hal.dotsandboxes.textinterface.Main;
+import java.util.List;
 
 public final class Game {
 
@@ -27,7 +27,7 @@ public final class Game {
 				ImmutableList.of(first, second));
 	}
 
-	public GameState nextMove(GameState fromState) {
+	public GameState nextMove(Main parent, GameState fromState) {
 		Preconditions.checkState(!isGameCompleted(fromState), 
 				"game is completed.");
 		
@@ -37,7 +37,7 @@ public final class Game {
 		// with the new edge added.
 		Player nextPlayer = getNextPlayer(fromState);
 		
-		Edge move = nextPlayer.getDecisionEngine().makeMove(fromState, 
+		Edge move = nextPlayer.getDecisionEngine().makeMove(parent, fromState, 
 				nextPlayer, this);
 		
 		// Ensure the edge does not already exist in the model

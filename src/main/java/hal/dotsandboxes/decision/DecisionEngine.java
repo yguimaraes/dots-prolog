@@ -4,10 +4,12 @@ import hal.dotsandboxes.Edge;
 import hal.dotsandboxes.Game;
 import hal.dotsandboxes.GameState;
 import hal.dotsandboxes.Player;
+import hal.dotsandboxes.textinterface.Main;
 
 public interface DecisionEngine {
-	
-	 Edge makeMove(GameState gameState, Player player, Game game);
+	    
+        //For UserInput
+	Edge makeMove(Main parent, GameState gameState, Player player, Game game);
 	 
-	 String getName();
+	String getName();
 }

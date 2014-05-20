@@ -36,8 +36,10 @@ public class DotsAndBoxesText {
 	private static final Random RANDOM = new Random();
 	
 	private final boolean mAlwaysShowBoard;
+        
+        private Main mParent;
 	
-	public DotsAndBoxesText(int width, int height, Player p1, Player p2, 
+	public DotsAndBoxesText(Main parent, int width, int height, Player p1, Player p2, 
 			GameGridPrinter printer, boolean alwaysShowBoard) {
 		checkNotNull(p1, "player1 was null");
 		checkNotNull(p2, "player2 was null");
@@ -46,6 +48,8 @@ public class DotsAndBoxesText {
 		checkArgument(!p1.equals(p2), "player 1 and 2 are the same");
 		checkNotNull(printer);
 		
+                mParent = parent;
+                
 		mPlayer1 = p1;
 		mPlayer2 = p2;
 		
@@ -93,7 +97,7 @@ public class DotsAndBoxesText {
 			mOut.format(Values.TURN_START + "\n", turn, next.getName());
 			
 			// Let them take their turn
-			GameState newState = mGame.nextMove(state);
+			GameState newState = mGame.nextMove(mParent, state);
 			
 			// Report what they did..
 			Edge move = newState.getNewestEdge();

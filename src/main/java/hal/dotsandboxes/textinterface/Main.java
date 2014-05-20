@@ -1,6 +1,7 @@
 package hal.dotsandboxes.textinterface;
 
 import com.google.common.base.Preconditions;
+import hal.dotsandboxes.Edge;
 import hal.dotsandboxes.Player;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,6 +18,7 @@ public class Main extends javax.swing.JFrame {
     public int currentPlayer; //1 ou 2
     public DotsAndBoxesText dotsAndBoxesText;
     public int lastX, lastY;
+    public Edge lastEdge;
     
     public Main(){
         initComponents();
@@ -65,14 +67,15 @@ public class Main extends javax.swing.JFrame {
 
             Values.BoardRepresentation boardRepresentation = Values.BoardRepresentation.normal;
 
-            dotsAndBoxesText = new DotsAndBoxesText(options.getWidth(), options.getHeight(), p1, p2,
-                            boardRepresentation.getPrinter(), 
+            dotsAndBoxesText = new DotsAndBoxesText(this,
+                                    options.getWidth(), 
+                                    options.getHeight(), 
+                                    p1, p2,
+                                    boardRepresentation.getPrinter(), 
                             true);
         }catch(IOException e){
 
         }
-			
-        //dotsAndBoxesText.play();
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -298,77 +301,36 @@ public class Main extends javax.swing.JFrame {
         jLabelBoard.setLocation(board.getPaddX(), board.getPaddY());
         
         //Really start game
-        ////////////////////dotsAndBoxesText.play();
+        dotsAndBoxesText.play();
     }//GEN-LAST:event_jButtonStartGameActionPerformed
 
     private void jLabelTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelTableMousePressed
-        //Get x y
-              
-        
     }//GEN-LAST:event_jLabelTableMousePressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         getBoardInput();
-        System.out.println("getBoardInput()");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBoxGridHeigthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxGridHeigthActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxGridHeigthActionPerformed
 
-    public void getBoardInput(){
+    public Edge getBoardInput(){     
+        System.out.println("Inside getBoardInput()");
         //Add action listener to label        
         jLabelTable.addMouseListener(new MouseAdapter(){
             @Override
-            public void mousePressed(MouseEvent e){             
-                //Get X and Y
-                lastX = e.getX() - board.getPaddX();
-                lastY = e.getY() - board.getPaddY();
-                int sizeX = lastX, sizeY = lastY;
-                int countX = 0, countY = 0;
+            public void mousePressed(MouseEvent e){   
+                System.out.println("mousePressed()");
                 
-                //X and Y must be inside the board
-                if(lastX > board.getBoardWidth() || lastY > board.getBoardHeigth())
-                    return;
-                
-                //Get Edge
-                String direction = "";
-                //X and Y
-                while(sizeX > board.getExtendedBoxSide()){
-                    sizeX = sizeX - board.getBoxSide();
-                    countX++;
-                }
-                
-                while(sizeY > board.getExtendedBoxSide()){
-                    sizeY = sizeY - board.getBoxSide();
-                    countY++;
-                }
-                
-                if(sizeX > 2*board.getDotRadius() && sizeX < board.getBoxSide()){
-                    if(sizeY > 0 && sizeY < 2*board.getDotRadius()){
-                        direction = "RIGTH"; //(UP)
-                    }else if(sizeY > board.getBoxSide() && sizeY < 2*board.getDotRadius() + board.getBoxSide()){
-                        direction = "RIGTH"; //(DOWN)
-                        countY++;
-                    }
-                }else if(sizeY > 2*board.getDotRadius() && sizeY < board.getBoxSide()){
-                    if(sizeX > 0 && sizeX < 2*board.getDotRadius()){
-                        direction = "DOWN"; //(LEFT)
-                    }else if(sizeX > board.getBoxSide() && sizeX < 2*board.getDotRadius() + board.getBoxSide()){
-                        direction = "DOWN"; //(RIGTH)
-                        countX++;
-                    }
-                }else{
-                    return;
-                }
-                            
-                System.out.println("\nEDGE = (" + countX + ", " + 
-                        countY + ", " + direction + ")\n");
+                lastEdge = board.getEdge(e.getX(), e.getY());
                 
                 jLabelTable.removeMouseListener(this);
             }
         });
+        System.out.println("return lastEdge;");
+        return lastEdge;
     }
     
     public static void main(String args[]){

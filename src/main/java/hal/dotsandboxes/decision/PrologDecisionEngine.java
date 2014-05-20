@@ -17,6 +17,7 @@ import hal.dotsandboxes.prolog.PrologRunner;
 import hal.dotsandboxes.prolog.PrologRunner.PrologException;
 import hal.dotsandboxes.textinterface.Values;
 import static com.google.common.base.Preconditions.*;
+import hal.dotsandboxes.textinterface.Main;
 
 
 /**
@@ -47,7 +48,7 @@ public class PrologDecisionEngine implements DecisionEngine {
 	}
 	
 	@Override
-	public Edge makeMove(GameState gameState, Player player, Game game) {
+	public Edge makeMove(Main parent, GameState gameState, Player player, Game game) {
 		
 		System.out.format(Values.COMPUTER_THINKING + "\n", getName());
 		long start = System.currentTimeMillis();
