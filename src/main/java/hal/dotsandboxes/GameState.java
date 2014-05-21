@@ -200,6 +200,20 @@ public class GameState {
 		checkNotNull(edge, "edge was null");
 		return requireEdgeData(edge).getOwner();
 	}
+        
+        public boolean containsCell(int x, int y){
+            Edge edgeTop = Edge.obtain(x, y, Direction.RIGHT);
+            Edge edgeLeft = Edge.obtain(x, y, Direction.BELOW);
+            Edge edgeRight = Edge.obtain(x+1, y+1, Direction.ABOVE);
+            Edge edgeBottom = Edge.obtain(x+1, y+1, Direction.LEFT);
+            
+            //if it contains all four edges            
+            if(containsEdge(edgeTop) && containsEdge(edgeLeft) &&
+                    containsEdge(edgeRight) && containsEdge(edgeBottom))
+                return true;
+            else
+                return false;
+        }
 	
 	public Player getCellOwner(int x, int y) {
 		return getEdgeOwner(getEdgeWhichCompletesCell(x, y));
@@ -352,6 +366,8 @@ public class GameState {
 			   containsEdge(x + 1, y, Direction.BELOW);
 	}
 
+        
+        //in order to get who completed the cell
 	public Edge getEdgeWhichCompletesCell(int x, int y) {
 		checkPositionIndex(x, getCellCountX());
 		checkPositionIndex(y, getCellCountY());

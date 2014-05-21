@@ -27,7 +27,7 @@ public final class Game {
 				ImmutableList.of(first, second));
 	}
 
-	public GameState nextMove(Main parent, GameState fromState) {
+	public GameState nextMove(Edge lastEdge, GameState fromState) {
 		Preconditions.checkState(!isGameCompleted(fromState), 
 				"game is completed.");
 		
@@ -37,7 +37,7 @@ public final class Game {
 		// with the new edge added.
 		Player nextPlayer = getNextPlayer(fromState);
 		
-		Edge move = nextPlayer.getDecisionEngine().makeMove(parent, fromState, 
+		Edge move = nextPlayer.getDecisionEngine().makeMove(lastEdge, fromState, 
 				nextPlayer, this);
 		
 		// Ensure the edge does not already exist in the model

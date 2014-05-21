@@ -9,7 +9,7 @@ import hal.dotsandboxes.textinterface.Main;
 public interface DecisionEngine {
 	    
         //For UserInput
-	Edge makeMove(Main parent, GameState gameState, Player player, Game game);
+	Edge makeMove(Edge lastEdge, GameState gameState, Player player, Game game);
 	 
 	String getName();
 }

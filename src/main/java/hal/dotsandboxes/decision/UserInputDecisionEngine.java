@@ -8,7 +8,6 @@ import hal.dotsandboxes.Edge;
 import hal.dotsandboxes.Game;
 import hal.dotsandboxes.GameState;
 import hal.dotsandboxes.Player;
-import hal.dotsandboxes.textinterface.Main;
 import hal.dotsandboxes.textinterface.Values;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -38,45 +37,24 @@ public class UserInputDecisionEngine implements DecisionEngine {
 	}
 	
 	@Override
-	public Edge makeMove(Main parent, GameState gameState, Player player, Game game) {
+	public Edge makeMove(Edge lastEdge, GameState gameState, Player player, Game game) {
 		Edge move = null;
 		
-		do {
-//			mOut.print(Values.ENTER_MOVE_PROMPT);
-//			String input = InputUtils.readLine(mIn);
-//			mOut.println(); // end the line after reading input.
-//			Matcher m = INPUT_PATTERN.matcher(input);
-//			
-//			if(!m.matches()) {
-//				notifyBadInput();
-//				continue;
-//			}
+		do {                                       
+                    Edge e = lastEdge;
+
+                    if(!edgeInBounds(gameState, e)) {
+                            notifyMoveOutOfBounds();
+                            continue;
+                    }
 			
-			// Build an edge from the user input.
-//			Edge e = Edge.obtain(
-//					Integer.parseInt(m.group(1)),
-//					Integer.parseInt(m.group(2)),
-//					directionFromWord((m.group(3))));
-                    
-                                           
-                        Edge e = parent.getBoardInput();
-                        
-                        System.out.println("and the game continues");
-                        
-                        System.out.println(e.toString());
-			
-			if(!edgeInBounds(gameState, e)) {
-				notifyMoveOutOfBounds();
-				continue;
-			}
-			
-			if(gameState.containsEdge(e)) {
-				notifyEdgeAlreadyExists();
-				continue;
-			}
-			
-			// All ok
-			move = e;
+                    if(gameState.containsEdge(e)) {
+                            notifyEdgeAlreadyExists();
+                            continue;
+                    }
+
+                    // All ok
+                    move = e;
 			
 		} while(move == null);
 		

@@ -10,14 +10,13 @@ import hal.util.Pair;
 
 import java.io.PrintStream;
 import java.util.List;
-import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
-public class DotsAndBoxesText {
+public class DotsAndBoxesPlay {
 	private final int mOutWidth = 80;
 	
 	private final PrintStream mOut = System.out;
@@ -25,21 +24,19 @@ public class DotsAndBoxesText {
 	private final int mBoardWidth;
 	private final int mBoardHeight;
 	
-	private final Game mGame;
-	
+	private final Game mGame;	
 	private final Player mPlayer1;
-	
 	private final Player mPlayer2;
 	
 	private final GameGridPrinter mPrinter;
 	
-	private static final Random RANDOM = new Random();
-	
 	private final boolean mAlwaysShowBoard;
         
-        private Main mParent;
+        private int turn;
+        
+        GameState mState;
 	
-	public DotsAndBoxesText(Main parent, int width, int height, Player p1, Player p2, 
+	public DotsAndBoxesPlay(int width, int height, Player p1, Player p2, 
 			GameGridPrinter printer, boolean alwaysShowBoard) {
 		checkNotNull(p1, "player1 was null");
 		checkNotNull(p2, "player2 was null");
@@ -47,8 +44,6 @@ public class DotsAndBoxesText {
 		checkArgument(height > 1, "height was < 2");
 		checkArgument(!p1.equals(p2), "player 1 and 2 are the same");
 		checkNotNull(printer);
-		
-                mParent = parent;
                 
 		mPlayer1 = p1;
 		mPlayer2 = p2;
@@ -62,98 +57,114 @@ public class DotsAndBoxesText {
 		mAlwaysShowBoard = alwaysShowBoard;
 	}
 	
-	public void play() {
-		
-		// Print the title with an underline below.
-		mOut.println(StringUtils.center(Values.TITLE, mOutWidth));
-		mOut.println(StringUtils.center(StringUtils.repeat(
-				Values.TITLE_UNDERSCORE, Values.TITLE.length()), mOutWidth));
-		mOut.println();
-		
-		// Print a message introducing the game
-		mOut.println(Values.INTRO_MSG);
-		mOut.println();
-		
-		// Print a header identifying the two players
-		printPlayerAnnounce();
-		mOut.println();
-		
-		// Randomise player order
-		final List<Player> players = RANDOM.nextBoolean() ? 
-				ImmutableList.of(mPlayer1, mPlayer2) :
-				ImmutableList.of(mPlayer2, mPlayer1);
-		
-		GameState state = GameState.get(mBoardWidth, mBoardHeight, 
-				players);
-		
-		int turn = 1;
-		
-		while(!mGame.isGameCompleted(state)) {
+        public void start(){ //initialize game
+//            // Print the title with an underline below.
+//            mOut.println(StringUtils.center(Values.TITLE, mOutWidth));
+//            mOut.println(StringUtils.center(StringUtils.repeat(
+//                            Values.TITLE_UNDERSCORE, Values.TITLE.length()), mOutWidth));
+//            mOut.println();
+//
+//            // Print a message introducing the game
+//            mOut.println(Values.INTRO_MSG);
+//            mOut.println();
+//
+//            // Print a header identifying the two players
+//            printPlayerAnnounce();
+//            mOut.println();
+
+            //User (mPlayer1) starts 
+            final List<Player> players = ImmutableList.of(mPlayer1, mPlayer2);
+
+            mState = GameState.get(mBoardWidth, mBoardHeight, players);
+
+            turn = 1;
+        }
+        
+	public GameState play(Edge lastEdge) { //each time the screen is pressed
+            if(mGame.isGameCompleted(mState)){
+                checkOver(mState);
+            }else{
 			
-			// Find who's going next
-			final Player next = mGame.getNextPlayer(state);
-			
-			// Print the turn start message
-			mOut.format(Values.TURN_START + "\n", turn, next.getName());
-			
-			// Let them take their turn
-			GameState newState = mGame.nextMove(mParent, state);
-			
-			// Report what they did..
-			Edge move = newState.getNewestEdge();
-			mOut.format(Values.TURN_RESULT, next.getName(),
-					move.getCanX(), move.getCanY(), 
-					move.getCanDirection().toString());
-			
-			// Print a message if the move completed any cells (at most 2 can be 
-			// completed by any move).
-			switch(newState.getCompletedCellCount() - 
-					state.getCompletedCellCount()) {
-				case 1: mOut.print(Values.TURN_RESULT_COMPLETED_1);
-					break;
-				case 2: mOut.print(Values.TURN_RESULT_COMPLETED_2);
-					break;
-			}
-			
-			boolean gameOver = mGame.isGameCompleted(newState);
-			if(!gameOver) {
-				// Ask if the board should be printed
-				mOut.print(Values.PROMPT_SHOW_BOARD);
-				
-				// If we're auto answering yes print a yes for consistency
-				if(mAlwaysShowBoard) 
-					mOut.print("yes");
-			}
-			if(mAlwaysShowBoard || gameOver || 
-					InputUtils.askYesNoQuestion(System.in, false)) {
-				mOut.println(); // clear the user input line
-				mOut.println();
-				printBoard(newState);
-			}
-			else {
-				mOut.println();
-				mOut.println();
-			}
-			
-			state = newState;
-			++turn;
-		}
-		Player p1 = state.getPlayers().get(0);
-		Player p2 = state.getPlayers().get(1);
-		int score1 = mGame.getScore(state, p1);
-		int score2 = mGame.getScore(state, p2);
-		
-		if(score1 == score2)
-			mOut.println(Values.RESULT_DRAW);
-		else
-			mOut.println(String.format(Values.RESULT_WINNER, (score1 > score2 ? 
-					p1 : p2).getName()));
-		
-		// Print final scores
-		mOut.format(Values.SCORE + "\n", p1.getName(), 
-				mGame.getScore(state, p1));
-		mOut.format(Values.SCORE + "\n", p2.getName(), 
-				mGame.getScore(state, p2));
+                // Find who's gonna play
+                final Player currentPlayer = mGame.getNextPlayer(mState);
+
+                // Print the turn start message
+                mOut.format(Values.TURN_START + "\n", turn, currentPlayer.getName());
+
+                // Let them take their turn
+                GameState newState = mGame.nextMove(lastEdge, mState);
+
+                // Report what they did..
+                Edge move = newState.getNewestEdge();
+                mOut.format(Values.TURN_RESULT, currentPlayer.getName(),
+                                move.getCanX(), move.getCanY(), 
+                                move.getCanDirection().toString());
+
+                // Print a message if the move completed any cells (at most 2 can be 
+                // completed by any move).
+                switch(newState.getCompletedCellCount() - 
+                                mState.getCompletedCellCount()) {
+                        case 1: mOut.print(Values.TURN_RESULT_COMPLETED_1);
+                                break;
+                        case 2: mOut.print(Values.TURN_RESULT_COMPLETED_2);
+                                break;
+                }
+
+                //check game over
+                
+                mState = newState;
+                ++turn;
+                
+                //if the next currentPlayer player is the machine, we call the play again
+                final Player nextPlayer = mGame.getNextPlayer(mState);
+                if(nextPlayer.equals(mPlayer2)){
+                    Edge nullEdge = null;
+                    play(nullEdge);
+                }
+            }
+            return mState;
+        }
+        
+        public boolean checkOver(GameState state){
+            boolean gameOver = mGame.isGameCompleted(state);
+            if(!gameOver) {
+                    // Ask if the board should be printed
+                    mOut.print(Values.PROMPT_SHOW_BOARD);
+
+                    // If we're auto answering yes print a yes for consistency
+                    if(mAlwaysShowBoard) 
+                            mOut.print("yes");
+            }
+            if(mAlwaysShowBoard || gameOver || 
+                            InputUtils.askYesNoQuestion(System.in, false)) {
+                    mOut.println(); // clear the user input line
+                    mOut.println();
+                    printBoard(state);
+            }
+            else {
+                    mOut.println();
+                    mOut.println();
+            }
+            return gameOver;
+        }
+            
+        public void finish(){ //print scores
+            Player p1 = mState.getPlayers().get(0);
+            Player p2 = mState.getPlayers().get(1);
+            int score1 = mGame.getScore(mState, p1);
+            int score2 = mGame.getScore(mState, p2);
+
+            if(score1 == score2)
+                    mOut.println(Values.RESULT_DRAW);
+            else
+                    mOut.println(String.format(Values.RESULT_WINNER, (score1 > score2 ? 
+                                    p1 : p2).getName()));
+
+            // Print final scores
+            mOut.format(Values.SCORE + "\n", p1.getName(), 
+                            mGame.getScore(mState, p1));
+            mOut.format(Values.SCORE + "\n", p2.getName(), 
+                            mGame.getScore(mState, p2));
 	}
 	
 	/**

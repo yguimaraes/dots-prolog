@@ -48,7 +48,7 @@ public class PrologDecisionEngine implements DecisionEngine {
 	}
 	
 	@Override
-	public Edge makeMove(Main parent, GameState gameState, Player player, Game game) {
+	public Edge makeMove(Edge lastEdge, GameState gameState, Player player, Game game) {
 		
 		System.out.format(Values.COMPUTER_THINKING + "\n", getName());
 		long start = System.currentTimeMillis();
