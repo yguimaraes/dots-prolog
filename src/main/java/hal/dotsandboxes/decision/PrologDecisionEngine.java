@@ -49,8 +49,11 @@ public class PrologDecisionEngine implements DecisionEngine {
 	
 	@Override
 	public Edge makeMove(Edge lastEdge, GameState gameState, Player player, Game game) {
+                //lastEdge becauso of user thinking
+                lastEdge = null;                
 		
-		System.out.format(Values.COMPUTER_THINKING + "\n", getName());
+                //Get time
+		//System.out.format(Values.COMPUTER_THINKING + "\n", getName());
 		long start = System.currentTimeMillis();
 		String moveRequestTerm = buildGoalTerm(gameState, player, mDepth);
 		
@@ -67,7 +70,7 @@ public class PrologDecisionEngine implements DecisionEngine {
 		}
 		Matcher matcher = MOVE_PATTERN.matcher(response);
 		
-		// Validate the response
+		//validate the response
 		if(!matcher.find()) {
 			System.err.println("ERROR: Cannot make move, malformed response " +
 					"from prolog interpreter:");
@@ -88,8 +91,8 @@ public class PrologDecisionEngine implements DecisionEngine {
 		checkState(!gameState.containsEdge(move), 
 				"Prolog code made existing move");
 		
-		System.out.format("  Time taken: %s seconds.\n",
-				(System.currentTimeMillis() - start) / 1000f);
+		//System.out.format("  Time taken: %s seconds.\n",
+		//		(System.currentTimeMillis() - start) / 1000f);
 		return move;
 	}
 

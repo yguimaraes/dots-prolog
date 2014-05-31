@@ -7,6 +7,7 @@ import hal.dotsandboxes.Player;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 public class Main extends javax.swing.JFrame {
     //Class Variables    
@@ -327,16 +328,6 @@ public class Main extends javax.swing.JFrame {
     private void jButtonStartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartGameActionPerformed
         //PreStart the game
         GameOptions  options;
-
-//            "--player-one-type", "human",
-//            "--player-two-type", "prolog",
-//            "--prolog-executable", "swipl",
-//            "--prolog-type", "swi",
-//            "--p2-lookahead", "1",
-//            "--p1-lookahead", "2",
-//            "--width", "4",
-//            "--height", "4",
-//            "--yes"
             
         PlayerType playerOneType;
         PlayerType playerTwoType;
@@ -399,11 +390,17 @@ public class Main extends javax.swing.JFrame {
             lastX = evt.getX();
             lastY = evt.getY();
             lastEdge = board.getEdge(lastX, lastY);
-
+            
             //play
-            lastState = dotsAndBoxesPlay.play(lastEdge);
-            lastBoardImage = board.getBoardImage(lastState, lastBoardImage);
-            jLabelBoard.setIcon(lastBoardImage);
+            if(dotsAndBoxesPlay.play(lastEdge) != null){
+                lastState = dotsAndBoxesPlay.play(lastEdge);
+                lastBoardImage = board.getBoardImage(lastState, lastBoardImage);
+                jLabelBoard.setIcon(lastBoardImage);
+                
+                if(dotsAndBoxesPlay.checkFinish())
+                    JOptionPane.showMessageDialog(null, 
+                            dotsAndBoxesPlay.getResults());
+            }          
         }catch(IOException ex){
             ex.printStackTrace();
         }        

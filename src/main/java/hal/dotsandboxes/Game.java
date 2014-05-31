@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import static com.google.common.base.Preconditions.*;
 
 import com.google.common.collect.ImmutableList;
-import hal.dotsandboxes.textinterface.Main;
 import java.util.List;
 
 public final class Game {
@@ -18,35 +17,45 @@ public final class Game {
 	}
 	
 	public GameState start(Player first, Player second, int width, int height) {
-		checkNotNull(first);
-		checkNotNull(second);
-		checkArgument(width > 1, "width must be > 1");
-		checkArgument(height > 1, "height must be > 1");
-		
-		return GameState.get(width, height, 
-				ImmutableList.of(first, second));
+            checkNotNull(first);
+            checkNotNull(second);
+            checkArgument(width > 1, "width must be > 1");
+            checkArgument(height > 1, "height must be > 1");
+
+            return GameState.get(width, height, 
+                            ImmutableList.of(first, second));
 	}
 
 	public GameState nextMove(Edge lastEdge, GameState fromState) {
-		Preconditions.checkState(!isGameCompleted(fromState), 
-				"game is completed.");
-		
-		// Here is the logic behind the turn of a single player. We identify
-		// the player who is to play next and ask them to decide which edge they
-		// wish to add to the game's grid. We then return a version of the grid
-		// with the new edge added.
-		Player nextPlayer = getNextPlayer(fromState);
-		
-		Edge move = nextPlayer.getDecisionEngine().makeMove(lastEdge, fromState, 
-				nextPlayer, this);
-		
-		// Ensure the edge does not already exist in the model
-		if(fromState.containsEdge(move))
-			throw new IllegalStateException(String.format("DecisionEngine %s," +
-					"attempted to add pre existing edge: %s", 
-					nextPlayer.getDecisionEngine(), move));
-		
-		return fromState.withEdge(move, nextPlayer);
+            Preconditions.checkState(!isGameCompleted(fromState), 
+                            "game is completed.");
+
+            // Here is the logic behind the turn of a single player. We identify
+            // the player who is to play next and ask them to decide which edge they
+            // wish to add to the game's grid. We then return a version of the grid
+            // with the new edge added.
+            Player nextPlayer = getNextPlayer(fromState);
+
+            Edge move = nextPlayer.getDecisionEngine().makeMove(lastEdge, fromState, 
+                            nextPlayer, this);
+
+            //System.out.println("move = " + move.toString());
+
+            //if it was not an edge
+            if(move == null){
+                //System.out.println("Edge inserted by user was null");
+                //return old state
+                return fromState;
+            }
+
+            //ensure the edge does not already exist in the model
+            if(fromState.containsEdge(move))
+                    System.out.println("DecisionEngine "
+                            + nextPlayer.getDecisionEngine()
+                            + "attempted to add pre existing edge: "
+                            + move);
+
+            return fromState.withEdge(move, nextPlayer);
 	}
 	
 	public Player getNextPlayer(GameState state) {

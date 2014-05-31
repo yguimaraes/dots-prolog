@@ -28,6 +28,7 @@ public final class Players {
             //O executavel, ex: swipl
             File prologExecutable;
             if("swipl".contains(SystemUtils.FILE_SEPARATOR))
+                
                 prologExecutable = new File("swipl");
             else {
                 prologExecutable = Utils.findProgramOnPath("swipl");

@@ -29,8 +29,6 @@ public class DotsAndBoxesPlay {
 	private final Player mPlayer2;
 	
 	private final GameGridPrinter mPrinter;
-	
-	private final boolean mAlwaysShowBoard;
         
         private int turn;
         
@@ -53,8 +51,6 @@ public class DotsAndBoxesPlay {
 		
 		mGame = Game.INSTANCE;
 		mPrinter = printer;
-		
-		mAlwaysShowBoard = alwaysShowBoard;
 	}
 	
         public void start(){ //initialize game
@@ -82,83 +78,69 @@ public class DotsAndBoxesPlay {
         
 	public GameState play(Edge lastEdge) { //each time the screen is pressed
             if(mGame.isGameCompleted(mState)){
-                checkOver(mState);
+                finish();
             }else{
 			
                 // Find who's gonna play
                 final Player currentPlayer = mGame.getNextPlayer(mState);
 
                 // Print the turn start message
-                mOut.format(Values.TURN_START + "\n", turn, currentPlayer.getName());
+                //mOut.format(Values.TURN_START + "\n", turn, currentPlayer.getName());
 
                 // Let them take their turn
                 GameState newState = mGame.nextMove(lastEdge, mState);
 
-                // Report what they did..
+                // Print last move...
                 Edge move = newState.getNewestEdge();
-                mOut.format(Values.TURN_RESULT, currentPlayer.getName(),
-                                move.getCanX(), move.getCanY(), 
-                                move.getCanDirection().toString());
+                System.out.print("Turn " + turn + ": "
+                    + currentPlayer.getName() + " - "
+                    + move.getCanX() + " " + move.getCanY() + " " 
+                    + move.getCanDirection().toString());
 
-                // Print a message if the move completed any cells (at most 2 can be 
-                // completed by any move).
-                switch(newState.getCompletedCellCount() - 
-                                mState.getCompletedCellCount()) {
-                        case 1: mOut.print(Values.TURN_RESULT_COMPLETED_1);
-                                break;
-                        case 2: mOut.print(Values.TURN_RESULT_COMPLETED_2);
-                                break;
+                // Print a message if the move completed any cells
+                if(newState.getCompletedCellCount() - mState.getCompletedCellCount() > 0) {
+                        System.out.print(" -> Completed cell");
                 }
-
-                //check game over
-                
+                System.out.println();
+                                
                 mState = newState;
                 ++turn;
                 
                 //if the next currentPlayer player is the machine, we call the play again
                 final Player nextPlayer = mGame.getNextPlayer(mState);
-                if(nextPlayer.equals(mPlayer2)){
+                if(currentPlayer.equals(mPlayer2) && 
+                        nextPlayer.equals(mPlayer2)){
                     Edge nullEdge = null;
                     play(nullEdge);
                 }
             }
             return mState;
         }
-        
-        public boolean checkOver(GameState state){
-            boolean gameOver = mGame.isGameCompleted(state);
-            if(!gameOver) {
-                    // Ask if the board should be printed
-                    mOut.print(Values.PROMPT_SHOW_BOARD);
-
-                    // If we're auto answering yes print a yes for consistency
-                    if(mAlwaysShowBoard) 
-                            mOut.print("yes");
+                    
+        public boolean checkFinish(){
+            if(mGame.isGameCompleted(mState)){
+                //finish();
+                return true;
+            }else{
+                return false;
             }
-            if(mAlwaysShowBoard || gameOver || 
-                            InputUtils.askYesNoQuestion(System.in, false)) {
-                    mOut.println(); // clear the user input line
-                    mOut.println();
-                    printBoard(state);
-            }
-            else {
-                    mOut.println();
-                    mOut.println();
-            }
-            return gameOver;
         }
-            
+        
         public void finish(){ //print scores
+            System.out.println();
+            
             Player p1 = mState.getPlayers().get(0);
             Player p2 = mState.getPlayers().get(1);
             int score1 = mGame.getScore(mState, p1);
             int score2 = mGame.getScore(mState, p2);
+                      
 
             if(score1 == score2)
                     mOut.println(Values.RESULT_DRAW);
             else
-                    mOut.println(String.format(Values.RESULT_WINNER, (score1 > score2 ? 
-                                    p1 : p2).getName()));
+                    mOut.println(String.format(Values.RESULT_WINNER, 
+                            (score1 > score2 ? 
+                            p1 : p2).getName()));
 
             // Print final scores
             mOut.format(Values.SCORE + "\n", p1.getName(), 
@@ -166,6 +148,28 @@ public class DotsAndBoxesPlay {
             mOut.format(Values.SCORE + "\n", p2.getName(), 
                             mGame.getScore(mState, p2));
 	}
+        
+        public String getResults(){
+            String answer = "";
+            
+            Player p1 = mState.getPlayers().get(0);
+            Player p2 = mState.getPlayers().get(1);
+            int score1 = mGame.getScore(mState, p1);
+            int score2 = mGame.getScore(mState, p2);
+            
+            if(score1 == score2)
+                answer += "Empate! \n";
+            else
+                answer += "Jogador " + (score1 > score2 ? "1" : "2") + " venceu! \n";
+
+            // Print final scores
+            answer += "  - Jogador 1: "
+                    + mGame.getScore(mState, p1) + "\n";
+            answer += "  - Jogador 2: "
+                    + mGame.getScore(mState, p2) + "\n";
+            
+            return answer;
+        }
 	
 	/**
 	 * Gives the spacing required on either side of str to centre it in an area 

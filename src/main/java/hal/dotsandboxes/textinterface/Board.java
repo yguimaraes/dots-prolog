@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Board {
-    private final String boxString = "box.png";
+    private final String boxString = "box3.png";
     
     private final String edgeBlueHstring = "side_blue_h.png";
     private final String edgeBlueVstring = "side_blue_v.png";
@@ -213,7 +213,7 @@ public class Board {
     }
     
     public Edge getEdge(int _lastX, int _lastY){
-        System.out.println("getEdge()");
+        //System.out.println("getEdge()");
         
         Edge emptyEdge = null;
         

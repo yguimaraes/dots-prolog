@@ -57,6 +57,6 @@ public final class DotsAndBoxesUtils {
 					y >= 0 && y < state.getNodeCountY() - 1;
 		}
 		
-		throw new AssertionError();
+		return false;
 	}
 }

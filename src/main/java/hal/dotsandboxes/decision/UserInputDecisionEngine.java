@@ -42,24 +42,26 @@ public class UserInputDecisionEngine implements DecisionEngine {
 		
 		do {                                       
                     Edge e = lastEdge;
+                    
+                    try{
+                        if(!edgeInBounds(gameState, e)) {
+                            return null;
+                        }
+                    			
+                        if(gameState.containsEdge(e)) {
+                            return null;
+                        }
 
-                    if(!edgeInBounds(gameState, e)) {
-                            notifyMoveOutOfBounds();
-                            continue;
+                    }catch(NullPointerException ex){
+                        //System.out.println("Invalid Edge");
+                        return null;
                     }
-			
-                    if(gameState.containsEdge(e)) {
-                            notifyEdgeAlreadyExists();
-                            continue;
-                    }
-
                     // All ok
                     move = e;
 			
 		} while(move == null);
-		
-                
-                System.out.println("return move;");
+		                
+                //System.out.println("return move;");
 		return move;
 	}
 	
