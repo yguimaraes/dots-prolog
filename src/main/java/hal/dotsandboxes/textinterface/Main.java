@@ -332,12 +332,12 @@ public class Main extends javax.swing.JFrame {
         PlayerType playerOneType;
         PlayerType playerTwoType;
 
-//        if(jComboBoxPlayer1.getSelectedItem() == "Prolog")
+//        if("Prolog".equals(jComboBoxPlayer1.getSelectedItem().toString()))
 //            playerOneType = PlayerType.prolog;
 //        else //if(jComboBoxPlayer1.getSelectedItem() == "Human")
 //            playerOneType = PlayerType.human;
 //
-//        if(jComboBoxPlayer2.getSelectedItem() == "Prolog")
+//        if("Prolog".equals(jComboBoxPlayer2.getSelectedItem().toString()))
 //            playerTwoType = PlayerType.prolog;
 //        else //if(jComboBoxPlayer2.getSelectedItem() == "Human")
 //            playerTwoType = PlayerType.human;
