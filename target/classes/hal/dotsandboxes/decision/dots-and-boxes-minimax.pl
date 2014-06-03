@@ -1,13 +1,13 @@
-% Importa a biblioteca assoc para representar o estado do tabuleiro com as association lists
+% Representa o estado do tabuleiro com as association lists
 :- use_module(library(assoc)).
 
-% Utilizado para aplicar predicados nas listas, pode-se filtrar listas por exemplo
+% Para aplicar predicados nas listas, podendo filtrar listas por exemplo
 :- use_module(library(apply)).
 
 % Importa a biblioteca list para realizar operacoes comuns em listas(ex:tamanho).
 :- use_module(library(lists)).
 
-% Biblioteca random para gerar numeros aleatorios e nao selecionar sempre o mesmo dos movimentos otimizados
+% Gera numeros aleatorios para nao selecionar sempre o mesmo movimento otimizado
 :- use_module(library(random)).
 
 % State eh o estado do jogo com as caracteristicas definidas.
@@ -29,39 +29,23 @@ main(Width, Height, EdgePlayerPairs, SearchDepth, Players):-
 	minimax(State, FavoredPlayer, SearchDepth, move(Score, Edge)),
 	write(move(Score, Edge)).
 
-/*
- * The code following is the implementation of minimax with supporting 
- * predicates to work with the rules of dots and boxes.
- * 
- * I wrote everything from scratch myself rather than using the base Fox and 
- * Goose game provided to gain more experience, and a better understanding of 
- * Prolog.
- */
-
-% The directions 
+% As direcoes possiveis
 direction(right).
 direction(down).
 
+% Os jogadores possiveis
 player(p1).
 player(p2).
 
 
-%% empty_game_state(+Width, +Height, ?Players, ?State)
-% 
-% True if State is an empty gamestate. 
-% @param ?Players a list of two distinct players
-% 
+%Verdade quanto State for um jogo vazio e a lista players contiver dois jogadores distintos.
 empty_game_state(Width, Height, Players, State):-
 	State = gamestate(Width, Height, Edges, Players),
+        %Unifica Edges com uma lista de associacoes vazia
 	empty_assoc(Edges),
 	Players = [P1|[P2]], player(P1), player(P2), P1 \= P2.
 
-
-%% edge_in_game(+Width, +Height, -Edge)
-%
-% Enumerates the edges available in a game state of the given width and height.
-% An edge is of the form edge(X, Y, right|down). 
-%
+% Enumera as arestas disponiveis em um jogo, uma aresta eh da forma edge(X, Y, right|down). 
 edge_in_game(Width, Height, Edge) :-
 	Edge = edge(X, Y, down), 
 	in_range(0, Width, X), 
@@ -93,19 +77,14 @@ state_closed_edge(State, Edge, EdgeData) :-
 	get_assoc(Edge, Edges, EdgeData).
 
 
-%% state_put_edge(+GameState, +Edge, +Player, -NewState)
-% 
-% Adds the edge to the state, associating it with the player. NewState will be
-% the input gamestate with the edge added.
-% 
+% Associa a aresta de jogada de um jogador ao GameState gerando o novo NewState
 state_put_edge(GameState, Edge, Player, NewState) :-
-	% break up the gamestate
 	GameState = gamestate(Width, Height, Edges, Players),
 	
-	% Ensure player is a player
+	% member verifica se um processo pertence a lista
 	player(Player), member(Player, Players),
 	
-	% Ensure the edge is the bounds of the game
+	% Verifica que a aresta esta nos limnites do jogo
 	edge_in_game(Width, Height, Edge),
 	
 	(newest_edge(GameState, _, edge_data(_, age(NewestAge))) ->
@@ -117,30 +96,22 @@ state_put_edge(GameState, Edge, Player, NewState) :-
 	% unify newstate with the updated data
 	NewState = gamestate(Width, Height, NewEdges, Players), !.
 
-
-%% in_range(+Min, +Max, ?N)
-% 
-% Enumerates the integers between Min and Max. N is an integer >= Min and < Max.
-%
+% Enumera os inteiros em N, tais que N >= Min e N < Max
 in_range(Min, Max, N) :- Min < Max, N = Min.
 in_range(Min, Max, N) :- 
 	NextMin is Min + 1, NextMin < Max, in_range(NextMin, Max, N).
 
-%% minimax(+GameState, +FavoredPlayer, +Depth, -Result)
-% 
-% Gives a score to a gamestate by recursively applying minimax to child states.
-%
-% Result is of the form result(score, edge(x, y, direction))
-%
+% Atribue uma pontuacao para um gamestate recursivamente, aplicando minimax nos
+% estados filhos.
+% Result esta no formato result(score, edge(x, y, direction))
 minimax(GameState, FavoredPlayer, Depth, Result) :-
-	% The recursive case of minimax. Here we generate a new gamestate for 
-	% each possible move that can be made at this depth and recursivley 
-	% evaluate the new states with minimax.
-	
-	% Depth must be greater than zero otherwise we can't recurse.
+        % Sao gerados todos os estados para cada movimento possivel nessa
+        % profundidade e feita avaliacao recursiva com o minimax
+
+	% Profundidade precisa ser maior que 0, cc nao pode ocorrer recursao
 	Depth > 0,
 	
-	% Find the player who is to move this round
+	% Encontra qual sera o jogador do turno atual
 	next_player(GameState, Player),
 	
 	% Collect all possible edges we can add in a list
@@ -228,7 +199,6 @@ evaluate_board(GameState, FavoredPlayer, Score) :-
 		Score is (P1Score - P2Score) / (MaxScore / 2.0) ;
 		Score is (P2Score - P1Score) / (MaxScore / 2.0)).
 
-
 %% no_moves_left(+GameState)
 % 
 % True if the gamestate has no more moves which could be made.
@@ -244,32 +214,25 @@ no_moves_left(GameState):-
 	% The board is full if EdgeCount is equal to MaxEdges.
 	EdgeCount >= MaxEdges.
 
-
-%% next_player(+GameState, -Player)
-%
-% Gives the player who is to make the next move given the gamestate.
-%
+% Atribue em Player quem sera o proximo jogador, dado o estado do jogo
 next_player(GameState, Player):-
 	edge_count(GameState, 0),
 	GameState = gamestate(_, _, _, [Player|_]).
 next_player(GameState, Player):-
 	previous_player(GameState, PreviousPlayer),
 	(newest_edge_completed_cell(GameState, _, _) ->
-		% The previous player finished a cell so they get to play again
+		% Se o jogador fechou um quadrado ele joga de novo
 		Player = PreviousPlayer ;
 		
-		% unify player with the player who isn't the previous player
+		% unifica o jogador com o player que nao eh o jogador anterior
 		GameState = gamestate(_, _, _, [P1|[P2|_]]),
 		(PreviousPlayer = P1 -> Player = P2 ; Player = P1)).
-		
 
-%% previous_player(+GameState, -Player)
-%
-% The previous player to play is the player who added the most recent edge.
-%
+% O previous_player eh o autor do newest_edge
 previous_player(GameState, Player):-
 	newest_edge(GameState, _, edge_data(player(Player), _)).
 
+% Verdade se um quadrado fechado usa uma aresta no jogo atual
 cell_uses_edge(GameState, edge(X, Y, down), Cell):-
 	XMinus1 is X - 1,
 	Cell = cell(XMinus1, Y),
@@ -282,11 +245,8 @@ cell_uses_edge(GameState, edge(X, Y, _), Cell):-
 	Cell = cell(X, Y),
 	cell_completed_in_state(GameState, Cell, _, _).
 
-%% newest_edge_completed_cell(+GameState, -Edge, -Cell)
-%
-% The newest edge completed a cell if either of the cells adjacent to the edge
-% are completed.
-%
+% A ultima aresta fechou um quadrado se os quadrados adjacentes a aresta 
+% estiverem fechados.
 newest_edge_completed_cell(GameState, Edge, Cell):-
 	newest_edge(GameState, Edge, _),
 	cell_uses_edge(GameState, Edge, Cell).
@@ -305,8 +265,6 @@ newest_edge_([Head|Rest], CurrentLargest, Largest):-
 		newest_edge_(Rest, Head, Largest) ;
 		newest_edge_(Rest, CurrentLargest, Largest)).
 		
-
-
 %% max_edge_count(+Width, +Height, -Count)
 %
 % Count is the number of edges in a dots and boxes grid of the specified width
@@ -315,33 +273,18 @@ newest_edge_([Head|Rest], CurrentLargest, Largest):-
 max_edge_count(Width, Height, Count):-
 	Count is 2 * (Width - 1) * (Height - 1) + (Width - 1) + (Height - 1).
 
-
-%%
-%
-% 
-%
+% Atribue o em Count o numero de arestas no jogo
 edge_count(GameState, Count):-
 	GameState = gamestate(_, _, Edges, _),
 	assoc_to_list(Edges, EdgeList), length(EdgeList, Count).
 
-
-%% cell_in_grid(?Width, ?Height, ?Cell)
-%
-% Succeeds if the cell is a valid location in a grid of the given width and 
-% height.
-%
+% Verdade para os quadrados validos dado o tamanho do tabuleiro
 cell_in_grid(Width, Height, Cell):-
 	in_range(0, Width, X),
 	in_range(0, Height, Y),
 	Cell = cell(X, Y).
 
-
-%% cell_completed_in_state(+GameState, ?Cell, ?CompletingEdge, 
-%                          ?CompletingEdgeData)
-%
-% Succeeds if the specified cell has been completed in the gamestate. i.e. if
-% the cell has all 4 of its edges existing in the gamestate.
-%
+% Verdade se as quatro arestas do quadro existem no jogo
 cell_completed_in_state(GameState, Cell, CompletingEdge, CompletingEdgeData):-
 	GameState = gamestate(Width, Height, _, _),
 	cell_in_grid(Width, Height, Cell),
@@ -363,27 +306,22 @@ cell_completed_in_state(GameState, Cell, CompletingEdge, CompletingEdgeData):-
 	oldest_edge(Edge1-Data1, Edge2-Data2, Edge3-Data3, Edge4-Data4, 
 		CompletingEdge-CompletingEdgeData).
 	
+% OldestEdge e o par Edge-EdgeData com a maior idade (mais antigo)
 oldest_edge(Edge1, Edge2, Edge3, Edge4, OldestEdge):-
 	oldest_edge(Edge1, Edge2, Res1),
 	oldest_edge(Edge3, Edge4, Res2),
 	oldest_edge(Res1, Res2, OldestEdge).
 
-%% oldest_edge(+Edge1, +Edge2, ?OldestEdge)
-%
-% OldestEdge is the Edge-EdgeData pair with the largest age.
-%
+% OldestEdge e o par Edge-EdgeData com a maior idade (mais antigo)
 oldest_edge(Edge1, Edge2, OldestEdge):-
 	Edge1 = edge(_, _, _)-edge_data(_, age(Age1)),
 	Edge2 = edge(_, _, _)-edge_data(_, age(Age2)),
 	(Age1 > Age2 -> OldestEdge = Edge1 ; OldestEdge = Edge2).
 	
-
-%% edge_in_gamestate(+GameState, -Edge)
-%
-% Succeeds if the edge exists in the gamestate.
-% 
+% Verdade para as arestas existentes no jogo
 edge_in_gamestate(GameState, Edge, EdgeData):-
 	GameState = gamestate(_, _, Edges, _),
+        % Verdade quando Edge e EdgeData sao uma entrada de Edges
 	get_assoc(Edge, Edges, EdgeData).
 
 
@@ -392,10 +330,7 @@ cell_count(GameState, Player, Count):-
 		GameState, X, _, edge_data(player(Player), _)), Cells),
 	length(Cells, Count).
 
-%% random_element(+List, -Element).
-%
-% Element is a randomly chosen element from the List.
-%
+% O Element eh um item de List escolhido aleatoriamente
 random_element([], _):- fail.
 random_element(List, Element):-
 	length(List, Len),

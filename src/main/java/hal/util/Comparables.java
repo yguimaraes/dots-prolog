@@ -1,7 +1,7 @@
 package hal.util;
 
 public final class Comparables {
-	
+
 	/**
 	 * Returns the maximum of two {@link Comparable} objects.
 	 * 
@@ -14,7 +14,7 @@ public final class Comparables {
 			return b;
 		return a;
 	}
-	
+
 	/**
 	 * Returns the maximum of two {@link Comparable} objects, either or both of
 	 * which may be null. In the case of one object being null, the other is 
@@ -31,7 +31,7 @@ public final class Comparables {
 			return a;
 		return max(a, b);
 	}
-	
+
 	private Comparables() {
 		throw new AssertionError();
 	}

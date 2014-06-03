@@ -15,9 +15,7 @@ import hal.dotsandboxes.Player;
 import hal.dotsandboxes.GameState.ItemType;
 import hal.dotsandboxes.prolog.PrologRunner;
 import hal.dotsandboxes.prolog.PrologRunner.PrologException;
-import hal.dotsandboxes.textinterface.Values;
 import static com.google.common.base.Preconditions.*;
-import hal.dotsandboxes.textinterface.Main;
 
 
 /**
